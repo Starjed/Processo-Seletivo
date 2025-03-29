@@ -1,5 +1,6 @@
 package com.processo.seletivo.repository;
 
+import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
 import com.processo.seletivo.models.ServidorEfetivo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,4 +42,21 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
     WHERE LOWER(p.pesNome) LIKE LOWER(CONCAT('%', :nome, '%'))
 """)
     List<ServidorEfetivo> buscarPorNome(@Param("nome") String nome);
+
+
+    @Query("""
+    SELECT new com.processo.seletivo.dtos.EnderecoFuncionalDTO(
+        p.pesNome,
+        u.unidNome,
+        CONCAT(e.endLogradouro, ', ', e.endBairro, ' - ', e.endCidade, ' - ', e.endUf, ' - ', e.endCep)
+    )
+    FROM ServidorEfetivo se
+    JOIN se.pessoa p
+    JOIN Lotacao l ON l.servidorEfetivo = se
+    JOIN Unidade u ON u = l.unidade
+    JOIN PessoaEndereco pe ON pe.pessoa = p
+    JOIN Endereco e ON e = pe.endereco
+    WHERE LOWER(p.pesNome) LIKE LOWER(CONCAT('%', :nome, '%'))
+""")
+    List<EnderecoFuncionalDTO> buscarEnderecoFuncionalPorNome(@Param("nome") String nome);
 }

@@ -24,7 +24,6 @@ public class PessoaController {
 
     @GetMapping("/fake")
     public List<String> listarFake() {
-        System.out.println("caiu aqui");
         return List.of("João da Silva", "Maria Oliveira", "Carlos Souza");
     }
 

@@ -29,6 +29,12 @@ public class GimmePessoa implements CommandLineRunner {
     @Autowired
     private FotoPessoaRepository fotoPessoaRepository;
 
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+
+    @Autowired
+    private PessoaEnderecoRepository pessoaEnderecoRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -37,20 +43,20 @@ public class GimmePessoa implements CommandLineRunner {
         public void run(String... args) throws Exception {
 
             Pessoa pessoa = new Pessoa();
-            pessoa.setPesNome("João Teste");
+            pessoa.setPesNome("Joao Teste");
             pessoa.setPesDataNascimento(LocalDate.of(1990, 4, 15));
             pessoa.setPesSexo("M");
             pessoa.setPesMae("Maria Teste");
             pessoa.setPesPai("José Teste");
             pessoa = pessoaRepository.save(pessoa);
 
-            pessoa = entityManager.merge(pessoa); // ⬅️ isso resolve de vez
+            pessoa = entityManager.merge(pessoa);
 
             pessoa = pessoaRepository.findById(pessoa.getPesId()).orElseThrow();
 
             ServidorEfetivo servidor = new ServidorEfetivo();
             servidor.setSeMatricula("123456");
-            servidor.setPessoa(pessoa); // Aqui está o ponto crítico
+            servidor.setPessoa(pessoa);
             servidorEfetivoRepository.save(servidor);
 
             Unidade unidade = new Unidade();
@@ -70,6 +76,19 @@ public class GimmePessoa implements CommandLineRunner {
             foto.setFpBucket("https://example.com/foto_joao.jpg");
             foto.setFpHash("hash123");
             fotoPessoaRepository.save(foto);
+
+            Endereco endereco = new Endereco();
+            endereco.setEndLogradouro("Rua Principal");
+            endereco.setEndBairro("Centro");
+            endereco.setEndCidade("Cidade");
+            endereco.setEndUf("UF");
+            endereco.setEndCep("12345-678");
+            endereco = enderecoRepository.save(endereco);
+
+            PessoaEndereco pessoaEndereco = new PessoaEndereco();
+            pessoaEndereco.setPessoa(pessoa); // a mesma do servidor
+            pessoaEndereco.setEndereco(endereco);
+            pessoaEnderecoRepository.save(pessoaEndereco);
 
             System.out.println("Mock criado");
         }

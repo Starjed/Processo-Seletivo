@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtService {
     private final String SECRET = "minhasecretkeyfortokenjwtsegura123456";
-    private final long EXPIRATION_TIME = 1000 * 60 * 500; // 5 minutos
+    private final long EXPIRATION_TIME = 1000 * 60 * 5000;
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
     public String generateToken(String username) {
