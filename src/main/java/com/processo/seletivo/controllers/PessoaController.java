@@ -1,14 +1,16 @@
 package com.processo.seletivo.controllers;
 
-import jakarta.annotation.PostConstruct;
 import com.processo.seletivo.models.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.processo.seletivo.services.PessoaService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/pessoas")
@@ -18,13 +20,13 @@ public class PessoaController {
     private PessoaService pessoaService;
 
     @GetMapping
-    public List<Pessoa> listarTodos() {
-        return pessoaService.listarTodos();
-    }
-
-    @GetMapping("/fake")
-    public List<String> listarFake() {
-        return List.of("João da Silva", "Maria Oliveira", "Carlos Souza");
+    public ResponseEntity<Page<Pessoa>> listarTodosPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "pesNome") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ResponseEntity.ok(pessoaService.listarTodosPaginado(pageable));
     }
 
     @GetMapping("/{id}")
