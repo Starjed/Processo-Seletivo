@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @PostConstruct
-    public void init() {
-        System.out.println(">>> AuthController carregado!");
-    }
-
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -34,7 +29,6 @@ public class AuthController {
             String token = jwtService.generateToken(request.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));
         } catch (Exception e) {
-            System.out.println(">>> Erro ao autenticar: " + e.getMessage());
             return ResponseEntity.status(403).body(null);
         }
     }

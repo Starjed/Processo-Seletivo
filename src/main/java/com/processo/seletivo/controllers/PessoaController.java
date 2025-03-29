@@ -14,11 +14,6 @@ import java.util.List;
 @RequestMapping("/api/pessoas")
 public class PessoaController {
 
-    @PostConstruct
-    public void init() {
-        System.out.println(">>> PessoaController carregado!");
-    }
-
     @Autowired
     private PessoaService pessoaService;
 
