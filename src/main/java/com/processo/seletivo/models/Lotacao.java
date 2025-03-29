@@ -11,6 +11,46 @@ public class Lotacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lotId;
 
+    public Long getLotId() {
+        return lotId;
+    }
+
+    public void setLotId(Long lotId) {
+        this.lotId = lotId;
+    }
+
+    public ServidorEfetivo getServidorEfetivo() {
+        return servidorEfetivo;
+    }
+
+    public void setServidorEfetivo(ServidorEfetivo servidorEfetivo) {
+        this.servidorEfetivo = servidorEfetivo;
+    }
+
+    public Unidade getUnidade() {
+        return unidade;
+    }
+
+    public void setUnidade(Unidade unidade) {
+        this.unidade = unidade;
+    }
+
+    public LocalDate getLotDataLotacao() {
+        return lotDataLotacao;
+    }
+
+    public void setLotDataLotacao(LocalDate lotDataLotacao) {
+        this.lotDataLotacao = lotDataLotacao;
+    }
+
+    public LocalDate getLotDataRemocao() {
+        return lotDataRemocao;
+    }
+
+    public void setLotDataRemocao(LocalDate lotDataRemocao) {
+        this.lotDataRemocao = lotDataRemocao;
+    }
+
     @ManyToOne
     @JoinColumn(name = "pes_id")
     private ServidorEfetivo servidorEfetivo;
@@ -21,7 +61,5 @@ public class Lotacao {
 
     private LocalDate lotDataLotacao;
     private LocalDate lotDataRemocao;
-
-    // Getters e Setters
 }
 
