@@ -1,5 +1,6 @@
 package controllers;
 
+import jakarta.annotation.PostConstruct;
 import models.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,11 @@ import java.util.List;
 @RequestMapping("/api/pessoas")
 public class PessoaController {
 
+    @PostConstruct
+    public void init() {
+        System.out.println(">>> PessoaController carregado!");
+    }
+
     @Autowired
     private PessoaService pessoaService;
 
@@ -21,22 +27,26 @@ public class PessoaController {
         return pessoaService.listarTodos();
     }
 
+    @GetMapping("/fake")
+    public List<String> listarFake() {
+        System.out.println("caiu aqui");
+        return List.of("João da Silva", "Maria Oliveira", "Carlos Souza");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Pessoa> buscarPorId(@PathVariable Long id) {
         Pessoa pessoa = pessoaService.buscarPorId(id);
         return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
     }
-
     @PostMapping
     public ResponseEntity<Pessoa> criar(@RequestBody Pessoa pessoa) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.salvar(pessoa));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody Pessoa atualizada) {
-        Pessoa existente = pessoaService.buscarPorId(id);
-        if (existente == null) return ResponseEntity.notFound().build();
-        atualizada.setPesId(id);
-        return ResponseEntity.ok(pessoaService.salvar(atualizada));
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
+        pessoa.setPesId(id);
+        Pessoa atualizada = pessoaService.salvar(pessoa);
+        return ResponseEntity.ok(atualizada);
     }
 }
