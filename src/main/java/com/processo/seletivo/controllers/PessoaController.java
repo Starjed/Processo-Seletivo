@@ -1,12 +1,12 @@
-package controllers;
+package com.processo.seletivo.controllers;
 
 import jakarta.annotation.PostConstruct;
-import models.Pessoa;
+import com.processo.seletivo.models.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import services.PessoaService;
+import com.processo.seletivo.services.PessoaService;
 
 import java.util.List;
 

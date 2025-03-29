@@ -1,9 +1,9 @@
-package services;
+package com.processo.seletivo.services;
 
-import models.Pessoa;
+import com.processo.seletivo.models.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.PessoaRepository;
+import com.processo.seletivo.repository.PessoaRepository;
 
 import java.util.List;
 

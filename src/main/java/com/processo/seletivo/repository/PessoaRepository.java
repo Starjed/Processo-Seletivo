@@ -1,6 +1,6 @@
-package repository;
+package com.processo.seletivo.repository;
 
-import models.Pessoa;
+import com.processo.seletivo.models.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
