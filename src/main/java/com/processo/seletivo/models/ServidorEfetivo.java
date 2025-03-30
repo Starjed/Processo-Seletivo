@@ -1,7 +1,6 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -9,8 +8,9 @@ import java.util.List;
 public class ServidorEfetivo {
 
     @Id
-    private Long pesId;
+    private Integer pesId;
 
+    @Column(length = 20, name = "se_matricula")
     private String seMatricula;
 
     @OneToOne(cascade = CascadeType.MERGE)
@@ -18,16 +18,12 @@ public class ServidorEfetivo {
     @JoinColumn(name = "pes_id")
     private Pessoa pessoa;
 
-    @OneToMany(mappedBy = "servidorEfetivo")
-    private List<Lotacao> lotacoes;
 
-
-
-    public Long getPesId() {
+    public Integer getPesId() {
         return pesId;
     }
 
-    public void setPesId(Long pesId) {
+    public void setPesId(Integer pesId) {
         this.pesId = pesId;
     }
 

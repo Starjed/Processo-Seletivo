@@ -7,15 +7,33 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "lotacao")
 public class Lotacao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long lotId;
+    private Integer lotId;
 
-    public Long getLotId() {
+    @ManyToOne
+    @JoinColumn(name = "pes_id", nullable = false)
+    private ServidorEfetivo servidorEfetivo;
+
+    @ManyToOne
+    @JoinColumn(name = "unid_id", nullable = false)
+    private Unidade unidade;
+
+    @Column(name = "lot_data_lotacao")
+    private LocalDate lotDataLotacao;
+
+    @Column(name = "lot_data_remocao")
+    private LocalDate lotDataRemocao;
+
+    @Column(length = 100)
+    private String lotPortaria;
+
+    public Integer getLotId() {
         return lotId;
     }
 
-    public void setLotId(Long lotId) {
+    public void setLotId(Integer lotId) {
         this.lotId = lotId;
     }
 
@@ -51,15 +69,11 @@ public class Lotacao {
         this.lotDataRemocao = lotDataRemocao;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "pes_id")
-    private ServidorEfetivo servidorEfetivo;
+    public String getLotPortaria() {
+        return lotPortaria;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "unid_id")
-    private Unidade unidade;
-
-    private LocalDate lotDataLotacao;
-    private LocalDate lotDataRemocao;
+    public void setLotPortaria(String lotPortaria) {
+        this.lotPortaria = lotPortaria;
+    }
 }
-
