@@ -11,15 +11,4 @@ import java.util.Optional;
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Integer> {
 
-    Optional<Pessoa> findByPesNome(String nome);
-
-    List<Pessoa> findByPesNomeContainingIgnoreCase(String parteDoNome);
-
-    List<Pessoa> findByPesMae(String nomeDaMae);
-
-    List<Pessoa> findByPesSexo(String sexo);
-
-    List<Pessoa> findByPesDataNascimentoAfter(LocalDate data);
-
-    List<Pessoa> findByPesNomeAndPesSexo(String nome, String sexo);
 }

@@ -1,8 +1,5 @@
-// UnidadeController.java
 package com.processo.seletivo.controllers;
 
-import com.processo.seletivo.dtos.UnidadeEnderecoDTO;
-import com.processo.seletivo.models.Endereco;
 import com.processo.seletivo.models.Unidade;
 import com.processo.seletivo.services.EnderecoService;
 import com.processo.seletivo.services.UnidadeService;

@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -106,14 +104,7 @@ public class FotoPessoaService {
         List<String> links = new ArrayList<>();
 
         for (FotoPessoa foto : fotos) {
-            String url = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(bucket)
-                            .object(foto.getFpHash())
-                            .expiry(300)
-                            .build()
-            );
+            String url = gerarUrlTemporaria(foto.getFpHash());
             links.add(url);
         }
 

@@ -3,7 +3,6 @@ package com.processo.seletivo.controllers;
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
 import com.processo.seletivo.models.ServidorEfetivo;
-import com.processo.seletivo.repository.ServidorEfetivoRepository;
 import com.processo.seletivo.services.ServidorEfetivoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,8 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/servidores-efetivos")

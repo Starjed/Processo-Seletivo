@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.processo.seletivo.repository.PessoaRepository;
 
-import java.util.List;
-
 @Service
 public class PessoaService {
 
@@ -21,10 +19,6 @@ public class PessoaService {
 
     public Pessoa salvar(Pessoa pessoa) {
         return pessoaRepository.save(pessoa);
-    }
-
-    public void remover(Integer id) {
-        pessoaRepository.deleteById(id);
     }
 
     public Page<Pessoa> listarTodosPaginado(Pageable pageable) {

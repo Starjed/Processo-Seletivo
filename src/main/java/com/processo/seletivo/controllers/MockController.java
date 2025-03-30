@@ -1,6 +1,6 @@
 package com.processo.seletivo.controllers;
 
-import com.processo.seletivo.mocks.MockService;
+import com.processo.seletivo.services.MockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

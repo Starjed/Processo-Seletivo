@@ -18,7 +18,6 @@ public class LotacaoEndereco {
     @JoinColumn(name = "end_id")
     private Endereco endereco;
 
-    // Getters e Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

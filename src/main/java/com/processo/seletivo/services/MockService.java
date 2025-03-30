@@ -1,4 +1,4 @@
-package com.processo.seletivo.mocks;
+package com.processo.seletivo.services;
 
 import com.processo.seletivo.models.*;
 import com.processo.seletivo.repository.*;
@@ -88,7 +88,5 @@ public class MockService {
             pessoaEndereco.setEndereco(enderecos.get(i));
             pessoaEnderecoRepository.save(pessoaEndereco);
         }
-
-        System.out.println("✅ Mock de dados criado com sucesso.");
     }
 }
