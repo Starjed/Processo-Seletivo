@@ -20,7 +20,7 @@ public class FotoPessoaController {
     @PostMapping("/upload-fotos")
     public ResponseEntity<?> uploadMultiplasFotos(
             @RequestParam("files") MultipartFile[] files,
-            @RequestParam("pessoaId") Long pessoaId) {
+            @RequestParam("pessoaId") Integer pessoaId) {
         try {
             List<FotoPessoa> fotos = fotoService.uploadMultiplasFotos(Arrays.asList(files), pessoaId);
             return ResponseEntity.ok("Fotos salvas: " + fotos.size());
@@ -30,7 +30,7 @@ public class FotoPessoaController {
     }
 
     @GetMapping("/pessoa/{pessoaId}/links")
-    public ResponseEntity<?> gerarLinksPorPessoa(@PathVariable Long pessoaId) {
+    public ResponseEntity<?> gerarLinksPorPessoa(@PathVariable Integer pessoaId) {
         try {
             List<String> links = fotoService.gerarLinksPorPessoa(pessoaId);
             return ResponseEntity.ok(links);

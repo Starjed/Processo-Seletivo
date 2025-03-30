@@ -1,13 +1,10 @@
 package com.processo.seletivo.controllers;
 
 import com.processo.seletivo.models.Lotacao;
-import com.processo.seletivo.models.ServidorEfetivo;
 import com.processo.seletivo.models.ServidorTemporario;
-import com.processo.seletivo.models.Unidade;
 import com.processo.seletivo.services.LotacaoService;
 import com.processo.seletivo.services.ServidorEfetivoService;
 import com.processo.seletivo.services.ServidorTemporarioService;
-import com.processo.seletivo.services.UnidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/servidores")
-public class ServidorController {
+public class ServidorTemporarioController {
 
     @Autowired
     private ServidorEfetivoService servidorEfetivoService;
@@ -27,8 +24,6 @@ public class ServidorController {
     private ServidorTemporarioService servidorTemporarioService;
     @Autowired
     private LotacaoService lotacaoService;
-
-
 
     @GetMapping("/temporarios")
     public Page<ServidorTemporario> listarTemporarios(
@@ -46,7 +41,7 @@ public class ServidorController {
     }
 
     @PutMapping("/temporarios/{id}")
-    public ResponseEntity<ServidorTemporario> atualizarTemporario(@PathVariable Long id, @RequestBody ServidorTemporario servidor) {
+    public ResponseEntity<ServidorTemporario> atualizarTemporario(@PathVariable Integer id, @RequestBody ServidorTemporario servidor) {
         servidor.setPesId(id);
         return ResponseEntity.ok(servidorTemporarioService.salvar(servidor));
     }
@@ -64,7 +59,7 @@ public class ServidorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Lotacao> atualizar(@PathVariable Long id, @RequestBody Lotacao lotacao) {
+    public ResponseEntity<Lotacao> atualizar(@PathVariable Integer id, @RequestBody Lotacao lotacao) {
         lotacao.setLotId(id);
         return ResponseEntity.ok(lotacaoService.salvar(lotacao));
     }

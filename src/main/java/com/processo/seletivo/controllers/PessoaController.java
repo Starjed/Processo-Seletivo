@@ -30,7 +30,7 @@ public class PessoaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pessoa> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Pessoa> buscarPorId(@PathVariable Integer id) {
         Pessoa pessoa = pessoaService.buscarPorId(id);
         return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
     }
@@ -40,9 +40,16 @@ public class PessoaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Integer id, @RequestBody Pessoa pessoa) {
         pessoa.setPesId(id);
         Pessoa atualizada = pessoaService.salvar(pessoa);
         return ResponseEntity.ok(atualizada);
     }
+
+    @DeleteMapping("/excluir/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        pessoaService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
