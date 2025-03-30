@@ -1,36 +1,54 @@
 package com.processo.seletivo.services;
 
+import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
+import com.processo.seletivo.dtos.ServidorEfetivoDTO;
+import com.processo.seletivo.models.Pessoa;
 import com.processo.seletivo.models.ServidorEfetivo;
 import com.processo.seletivo.repository.ServidorEfetivoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class ServidorEfetivoService {
 
     @Autowired
-    private ServidorEfetivoRepository repository;
+    private ServidorEfetivoRepository servidorEfetivoRepository;
 
-    public List<ServidorEfetivo> listarTodos() {
-        return repository.findAll();
+    @Autowired
+    private PessoaService pessoaService;
+
+    public Page<ServidorEfetivo> listarTodos(Pageable pageable) {
+        return servidorEfetivoRepository.findAll(pageable);
     }
 
     public ServidorEfetivo salvar(ServidorEfetivo servidor) {
-        return repository.save(servidor);
+        if (servidor.getPessoa() != null && servidor.getPessoa().getPesId() != null) {
+            Pessoa pessoaPersistida = pessoaService.buscarPorId(servidor.getPessoa().getPesId());
+            servidor.setPessoa(pessoaPersistida); // reanexa a entidade
+        }
+
+        return servidorEfetivoRepository.save(servidor);
     }
 
-    public ServidorEfetivo buscarPorId(Long id) {
-        return repository.findById(id).orElse(null);
+    public ServidorEfetivo buscarPorId(Integer id) {
+        return servidorEfetivoRepository.findById(id).orElse(null);
     }
 
-
-    public List<ServidorEfetivo> buscarPorUnidade(Long unidId) {
-        return repository.findByUnidadeId(unidId);
+    public void deletar(Integer id) {
+        servidorEfetivoRepository.deleteById(id);
     }
 
-    public List<ServidorEfetivo> buscarPorNomeParcial(String nome) {
-        return repository.buscarPorNome(nome);
+    public Page<ServidorEfetivoDTO> buscarResumoPorUnidade(Pageable pageable, Integer unidId) {
+        return servidorEfetivoRepository.buscarResumoPorUnidade(unidId, pageable);
     }
+
+    public Page<EnderecoFuncionalDTO> buscarEnderecoFuncionalPorNome(String nome, Pageable pageable) {
+        return servidorEfetivoRepository.buscarEnderecoFuncionalPorNome(nome, pageable);
+    }
+
 }

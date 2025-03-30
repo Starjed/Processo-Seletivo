@@ -15,11 +15,7 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public List<Pessoa> listarTodos() {
-        return pessoaRepository.findAll();
-    }
-
-    public Pessoa buscarPorId(Long id) {
+    public Pessoa buscarPorId(Integer id) {
         return pessoaRepository.findById(id).orElse(null);
     }
 
@@ -27,12 +23,17 @@ public class PessoaService {
         return pessoaRepository.save(pessoa);
     }
 
-    public void remover(Long id) {
+    public void remover(Integer id) {
         pessoaRepository.deleteById(id);
     }
 
     public Page<Pessoa> listarTodosPaginado(Pageable pageable) {
         return pessoaRepository.findAll(pageable);
     }
+
+    public void deletar(Integer id) {
+        pessoaRepository.deleteById(id);
+    }
+
 }
 

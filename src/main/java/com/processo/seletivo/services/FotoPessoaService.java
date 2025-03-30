@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -31,8 +32,8 @@ public class FotoPessoaService {
     @Value("${minio.bucket}")
     private String bucket;
 
-    public FotoPessoa uploadFoto(MultipartFile file, Long pessoaId) throws Exception {
-        String nomeArquivo = UUID.randomUUID() + "-" + file.getOriginalFilename();
+    public FotoPessoa uploadFoto(MultipartFile file, Integer pessoaId) throws Exception {
+        String nomeArquivo = gerarNomeArquivo(file);
 
         criarBucketSeNaoExistir();
 
@@ -57,7 +58,7 @@ public class FotoPessoaService {
         return fotoPessoaRepository.save(foto);
     }
 
-    public List<FotoPessoa> uploadMultiplasFotos(List<MultipartFile> arquivos, Long pessoaId) throws Exception {
+    public List<FotoPessoa> uploadMultiplasFotos(List<MultipartFile> arquivos, Integer pessoaId) throws Exception {
         Pessoa pessoa = pessoaRepository.findById(pessoaId)
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
 
@@ -66,7 +67,7 @@ public class FotoPessoaService {
         List<FotoPessoa> fotosSalvas = new ArrayList<>();
 
         for (MultipartFile file : arquivos) {
-            String nomeArquivo = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            String nomeArquivo = gerarNomeArquivo(file);
 
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -100,18 +101,11 @@ public class FotoPessoaService {
         );
     }
 
-    public List<String> gerarLinksPorPessoa(Long pessoaId) throws Exception {
+    public List<String> gerarLinksPorPessoa(Integer pessoaId) throws Exception {
         List<FotoPessoa> fotos = fotoPessoaRepository.findByPessoaPesIdOrderByFpDataDesc(pessoaId);
         List<String> links = new ArrayList<>();
 
         for (FotoPessoa foto : fotos) {
-            String bucket = foto.getFpBucket();
-
-            // Fallback se o bucket for inválido
-            if (bucket == null || bucket.startsWith("http") || bucket.isBlank()) {
-                bucket = "fotos";
-            }
-
             String url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
@@ -133,5 +127,14 @@ public class FotoPessoaService {
         if (!existe) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
         }
+    }
+
+    private String gerarNomeArquivo(MultipartFile file) {
+        String extensao = "";
+        String originalName = file.getOriginalFilename();
+        if (originalName != null && originalName.contains(".")) {
+            extensao = originalName.substring(originalName.lastIndexOf("."));
+        }
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 32) + extensao;
     }
 }
