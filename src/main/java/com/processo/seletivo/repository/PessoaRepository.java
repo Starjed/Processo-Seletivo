@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
+public interface PessoaRepository extends JpaRepository<Pessoa, Integer> {
 
     Optional<Pessoa> findByPesNome(String nome);
 

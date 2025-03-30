@@ -3,6 +3,8 @@ package com.processo.seletivo.repository;
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
 import com.processo.seletivo.models.ServidorEfetivo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo, Long> {
+public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo, Integer> {
     @Query("""
     SELECT l.servidorEfetivo FROM Lotacao l
     WHERE l.unidade.unidId = :unidId
 """)
-    List<ServidorEfetivo> findByUnidadeId(@Param("unidId") Long unidId);
+    List<ServidorEfetivo> findByUnidadeId(@Param("unidId") Integer unidId);
 
 
     @Query("""
@@ -33,7 +35,7 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
     LEFT JOIN FotoPessoa fp ON fp.pessoa.pesId = p.pesId
     WHERE u.unidId = :unidId
 """)
-    List<ServidorEfetivoDTO> buscarResumoPorUnidade(@Param("unidId") Long unidId);
+    Page<ServidorEfetivoDTO> buscarResumoPorUnidade(@Param("unidId") Integer unidId, Pageable pageable);
 
 
     @Query("""
@@ -48,15 +50,19 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
     SELECT new com.processo.seletivo.dtos.EnderecoFuncionalDTO(
         p.pesNome,
         u.unidNome,
-        CONCAT(e.endLogradouro, ', ', e.endBairro, ' - ', e.endCidade, ' - ', e.endUf, ' - ', e.endCep)
+        CONCAT(e.endTipoLogradouro, ' ', e.endLogradouro, ', ', e.endNumero, ' - ',
+               e.endBairro, ' - ', c.cidNome, '/', c.cidUf, ' - CEP: ', e.endCep)
     )
     FROM ServidorEfetivo se
     JOIN se.pessoa p
     JOIN Lotacao l ON l.servidorEfetivo = se
     JOIN Unidade u ON u = l.unidade
-    JOIN PessoaEndereco pe ON pe.pessoa = p
-    JOIN Endereco e ON e = pe.endereco
+    JOIN UnidadeEndereco ue ON ue.unidade = u
+    JOIN Endereco e ON e = ue.endereco
+    JOIN Cidade c ON e.cidade = c
     WHERE LOWER(p.pesNome) LIKE LOWER(CONCAT('%', :nome, '%'))
 """)
-    List<EnderecoFuncionalDTO> buscarEnderecoFuncionalPorNome(@Param("nome") String nome);
+    Page<EnderecoFuncionalDTO> buscarEnderecoFuncionalPorNome(@Param("nome") String nome, Pageable pageable);
+
+
 }

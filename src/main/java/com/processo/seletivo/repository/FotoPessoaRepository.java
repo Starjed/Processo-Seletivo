@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface FotoPessoaRepository extends JpaRepository<FotoPessoa, Long> {
-    List<FotoPessoa> findByPessoaPesIdOrderByFpDataDesc(Long pessoaId);
+public interface FotoPessoaRepository extends JpaRepository<FotoPessoa, Integer> {
+    List<FotoPessoa> findByPessoaPesIdOrderByFpDataDesc(Integer pessoaId);
 }
