@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class JwtAuthFilter extends org.springframework.web.filter.OncePerRequestFilter {
     private final JwtService jwtService;
@@ -28,6 +29,11 @@ public class JwtAuthFilter extends org.springframework.web.filter.OncePerRequest
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
+
+        if (request.getRequestURI().contains("auth/login") && Objects.equals(request.getMethod(), "POST")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401

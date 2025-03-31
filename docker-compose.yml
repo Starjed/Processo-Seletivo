@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -28,7 +26,7 @@ services:
       - postgres
       - minio
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/seletivo
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/seletivo
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       MINIO_URL: http://host.docker.internal:9000
