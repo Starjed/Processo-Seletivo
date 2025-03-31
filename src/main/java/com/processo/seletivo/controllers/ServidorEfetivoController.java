@@ -48,7 +48,7 @@ public class ServidorEfetivoController {
         return se != null ? ResponseEntity.ok(se) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/efetivos/{id}")
+    @DeleteMapping("/efetivos/excluir/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         servidorEfetivoService.deletar(id);
         return ResponseEntity.noContent().build();

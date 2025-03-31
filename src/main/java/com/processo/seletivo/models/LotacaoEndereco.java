@@ -1,9 +1,13 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "lotacao_endereco")
+@Getter
+@Setter
 public class LotacaoEndereco {
 
     @Id
@@ -17,13 +21,4 @@ public class LotacaoEndereco {
     @ManyToOne
     @JoinColumn(name = "end_id")
     private Endereco endereco;
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public Lotacao getLotacao() { return lotacao; }
-    public void setLotacao(Lotacao lotacao) { this.lotacao = lotacao; }
-
-    public Endereco getEndereco() { return endereco; }
-    public void setEndereco(Endereco endereco) { this.endereco = endereco; }
 }

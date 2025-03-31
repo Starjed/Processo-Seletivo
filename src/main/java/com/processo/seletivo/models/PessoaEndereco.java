@@ -1,9 +1,13 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pessoa_endereco")
+@Getter
+@Setter
 public class PessoaEndereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,26 +24,5 @@ public class PessoaEndereco {
     public Endereco getEndereco() {
         return endereco;
     }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
 }
 

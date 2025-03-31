@@ -24,4 +24,8 @@ public class ServidorTemporarioService {
     public ServidorTemporario buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
+
+    public void deletar(Integer id) {
+        repository.deleteById(id);
+    }
 }

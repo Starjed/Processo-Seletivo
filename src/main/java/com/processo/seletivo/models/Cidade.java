@@ -1,9 +1,13 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cidade")
+@Getter
+@Setter
 public class Cidade {
 
     @Id
@@ -16,27 +20,4 @@ public class Cidade {
     @Column(length = 2)
     private String cidUf;
 
-    public Integer getCidId() {
-        return cidId;
-    }
-
-    public void setCidId(Integer cidId) {
-        this.cidId = cidId;
-    }
-
-    public String getCidNome() {
-        return cidNome;
-    }
-
-    public void setCidNome(String cidNome) {
-        this.cidNome = cidNome;
-    }
-
-    public String getCidUf() {
-        return cidUf;
-    }
-
-    public void setCidUf(String cidUf) {
-        this.cidUf = cidUf;
-    }
 }

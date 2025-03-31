@@ -17,17 +17,18 @@ public class FotoPessoaController {
     @Autowired
     private FotoPessoaService fotoService;
 
-    @PostMapping("/upload-fotos")
-    public ResponseEntity<?> uploadMultiplasFotos(
-            @RequestParam("files") MultipartFile[] files,
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFotos(
+            @RequestParam("files") List<MultipartFile> files,
             @RequestParam("pessoaId") Integer pessoaId) {
         try {
-            List<FotoPessoa> fotos = fotoService.uploadMultiplasFotos(Arrays.asList(files), pessoaId);
+            List<FotoPessoa> fotos = fotoService.uploadMultiplasFotos(files, pessoaId);
             return ResponseEntity.ok("Fotos salvas: " + fotos.size());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/pessoa/{pessoaId}/links")
     public ResponseEntity<?> gerarLinksPorPessoa(@PathVariable Integer pessoaId) {
@@ -38,5 +39,16 @@ public class FotoPessoaController {
             return ResponseEntity.status(500).body("Erro: " + e.getMessage());
         }
     }
+
+    @DeleteMapping("/excluir/{fotoId}")
+    public ResponseEntity<?> deletarFoto(@PathVariable Integer fotoId) {
+        try {
+            fotoService.deletarFoto(fotoId);
+            return ResponseEntity.ok("Foto removida com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro: " + e.getMessage());
+        }
+    }
+
 }
 

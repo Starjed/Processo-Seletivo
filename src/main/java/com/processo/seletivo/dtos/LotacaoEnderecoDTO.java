@@ -1,12 +1,12 @@
 package com.processo.seletivo.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class LotacaoEnderecoDTO {
     private Integer lotacaoId;
     private Integer enderecoId;
 
-    public Integer getLotacaoId() { return lotacaoId; }
-    public void setLotacaoId(Integer lotacaoId) { this.lotacaoId = lotacaoId; }
-
-    public Integer getEnderecoId() { return enderecoId; }
-    public void setEnderecoId(Integer enderecoId) { this.enderecoId = enderecoId; }
 }

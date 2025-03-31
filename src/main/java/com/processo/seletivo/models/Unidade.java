@@ -1,9 +1,15 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "unidade")
+@Getter
+@Setter
 public class Unidade {
 
     @Id
@@ -16,27 +22,6 @@ public class Unidade {
     @Column(length = 20)
     private String unidSigla;
 
-    public Integer getUnidId() {
-        return unidId;
-    }
-
-    public void setUnidId(Integer unidId) {
-        this.unidId = unidId;
-    }
-
-    public String getUnidNome() {
-        return unidNome;
-    }
-
-    public void setUnidNome(String unidNome) {
-        this.unidNome = unidNome;
-    }
-
-    public String getUnidSigla() {
-        return unidSigla;
-    }
-
-    public void setUnidSigla(String unidSigla) {
-        this.unidSigla = unidSigla;
-    }
+    @OneToMany(mappedBy = "unidade", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnidadeEndereco> enderecos;
 }

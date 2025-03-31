@@ -1,9 +1,13 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "servidor_efetivo")
+@Getter
+@Setter
 public class ServidorEfetivo {
 
     @Id
@@ -16,29 +20,4 @@ public class ServidorEfetivo {
     @MapsId
     @JoinColumn(name = "pes_id")
     private Pessoa pessoa;
-
-
-    public Integer getPesId() {
-        return pesId;
-    }
-
-    public void setPesId(Integer pesId) {
-        this.pesId = pesId;
-    }
-
-    public String getSeMatricula() {
-        return seMatricula;
-    }
-
-    public void setSeMatricula(String seMatricula) {
-        this.seMatricula = seMatricula;
-    }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
 }

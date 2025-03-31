@@ -6,6 +6,7 @@ import com.processo.seletivo.repository.FotoPessoaRepository;
 import com.processo.seletivo.repository.PessoaRepository;
 import io.minio.*;
 import io.minio.http.Method;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,32 +30,6 @@ public class FotoPessoaService {
 
     @Value("${minio.bucket}")
     private String bucket;
-
-    public FotoPessoa uploadFoto(MultipartFile file, Integer pessoaId) throws Exception {
-        String nomeArquivo = gerarNomeArquivo(file);
-
-        criarBucketSeNaoExistir();
-
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucket)
-                        .object(nomeArquivo)
-                        .stream(file.getInputStream(), file.getSize(), -1)
-                        .contentType(file.getContentType())
-                        .build()
-        );
-
-        Pessoa pessoa = pessoaRepository.findById(pessoaId)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
-
-        FotoPessoa foto = new FotoPessoa();
-        foto.setPessoa(pessoa);
-        foto.setFpBucket(bucket);
-        foto.setFpHash(nomeArquivo);
-        foto.setFpData(LocalDate.now());
-
-        return fotoPessoaRepository.save(foto);
-    }
 
     public List<FotoPessoa> uploadMultiplasFotos(List<MultipartFile> arquivos, Integer pessoaId) throws Exception {
         Pessoa pessoa = pessoaRepository.findById(pessoaId)
@@ -128,4 +103,24 @@ public class FotoPessoaService {
         }
         return UUID.randomUUID().toString().replace("-", "").substring(0, 32) + extensao;
     }
+
+    @Transactional
+    public void deletarFoto(Integer fotoId) {
+        FotoPessoa foto = fotoPessoaRepository.findById(fotoId)
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada"));
+
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(foto.getFpBucket())
+                            .object(foto.getFpHash())
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao remover foto do MinIO: " + e.getMessage());
+        }
+
+        fotoPessoaRepository.delete(foto);
+    }
+
 }

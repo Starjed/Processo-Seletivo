@@ -1,11 +1,15 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pessoa")
+@Getter
+@Setter
 public class Pessoa {
 
     @Id
@@ -26,51 +30,15 @@ public class Pessoa {
     @Column(length = 200)
     private String pesPai;
 
-    public Integer getPesId() {
-        return pesId;
-    }
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ServidorEfetivo servidorEfetivo;
 
-    public void setPesId(Integer pesId) {
-        this.pesId = pesId;
-    }
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ServidorTemporario servidorTemporario;
 
-    public String getPesNome() {
-        return pesNome;
-    }
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FotoPessoa> fotos;
 
-    public void setPesNome(String pesNome) {
-        this.pesNome = pesNome;
-    }
-
-    public LocalDate getPesDataNascimento() {
-        return pesDataNascimento;
-    }
-
-    public void setPesDataNascimento(LocalDate pesDataNascimento) {
-        this.pesDataNascimento = pesDataNascimento;
-    }
-
-    public String getPesSexo() {
-        return pesSexo;
-    }
-
-    public void setPesSexo(String pesSexo) {
-        this.pesSexo = pesSexo;
-    }
-
-    public String getPesMae() {
-        return pesMae;
-    }
-
-    public void setPesMae(String pesMae) {
-        this.pesMae = pesMae;
-    }
-
-    public String getPesPai() {
-        return pesPai;
-    }
-
-    public void setPesPai(String pesPai) {
-        this.pesPai = pesPai;
-    }
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PessoaEndereco> enderecos;
 }

@@ -1,40 +1,13 @@
 package com.processo.seletivo.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ServidorEfetivoDTO {
     private String nome;
     private Integer idade;
-
-    public String getFotoUrl() {
-        return fotoUrl;
-    }
-
-    public void setFotoUrl(String fotoUrl) {
-        this.fotoUrl = fotoUrl;
-    }
-
-    public String getUnidade() {
-        return unidade;
-    }
-
-    public void setUnidade(String unidade) {
-        this.unidade = unidade;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     private String unidade;
     private String fotoUrl;

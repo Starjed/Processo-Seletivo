@@ -21,7 +21,6 @@ public class JwtService {
     private final long EXPIRATION_TIME = 1000 * 60 * 5; // 5 minutos
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
-    // Gera o token incluindo as roles
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         List<String> roles = userDetails.getAuthorities()
@@ -53,7 +52,7 @@ public class JwtService {
 
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("roles", List.class); // roles como lista de string
+        return claims.get("roles", List.class);
     }
 
     private Claims extractAllClaims(String token) {

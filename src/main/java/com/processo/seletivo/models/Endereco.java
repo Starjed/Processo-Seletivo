@@ -1,9 +1,15 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "endereco")
+@Getter
+@Setter
 public class Endereco {
 
     @Id
@@ -31,67 +37,12 @@ public class Endereco {
     @JoinColumn(name = "cid_id", nullable = false)
     private Cidade cidade;
 
-    public Integer getEndId() {
-        return endId;
-    }
+    @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PessoaEndereco> pessoas;
 
-    public void setEndId(Integer endId) {
-        this.endId = endId;
-    }
+    @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnidadeEndereco> unidades;
 
-    public String getEndTipoLogradouro() {
-        return endTipoLogradouro;
-    }
-
-    public void setEndTipoLogradouro(String endTipoLogradouro) {
-        this.endTipoLogradouro = endTipoLogradouro;
-    }
-
-    public String getEndLogradouro() {
-        return endLogradouro;
-    }
-
-    public void setEndLogradouro(String endLogradouro) {
-        this.endLogradouro = endLogradouro;
-    }
-
-    public Integer getEndNumero() {
-        return endNumero;
-    }
-
-    public void setEndNumero(Integer endNumero) {
-        this.endNumero = endNumero;
-    }
-
-    public String getEndBairro() {
-        return endBairro;
-    }
-
-    public void setEndBairro(String endBairro) {
-        this.endBairro = endBairro;
-    }
-
-    public String getEndCep() {
-        return endCep;
-    }
-
-    public void setEndCep(String endCep) {
-        this.endCep = endCep;
-    }
-
-    public String getEndUf() {
-        return endUf;
-    }
-
-    public void setEndUf(String endUf) {
-        this.endUf = endUf;
-    }
-
-    public Cidade getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(Cidade cidade) {
-        this.cidade = cidade;
-    }
+    @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LotacaoEndereco> lotacoes;
 }

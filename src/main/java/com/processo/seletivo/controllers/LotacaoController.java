@@ -41,7 +41,7 @@ public class LotacaoController {
         return lotacao != null ? ResponseEntity.ok(lotacao) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/excluir/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         lotacaoService.deletar(id);
         return ResponseEntity.noContent().build();

@@ -1,10 +1,15 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "servidor_temporario")
+@Getter
+@Setter
 public class ServidorTemporario {
 
     @Id
@@ -20,36 +25,4 @@ public class ServidorTemporario {
 
     @Column(name = "st_data_demissao")
     private LocalDate stDataDemissao;
-
-    public Integer getPesId() {
-        return pesId;
-    }
-
-    public void setPesId(Integer pesId) {
-        this.pesId = pesId;
-    }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public LocalDate getStDataAdmissao() {
-        return stDataAdmissao;
-    }
-
-    public void setStDataAdmissao(LocalDate stDataAdmissao) {
-        this.stDataAdmissao = stDataAdmissao;
-    }
-
-    public LocalDate getStDataDemissao() {
-        return stDataDemissao;
-    }
-
-    public void setStDataDemissao(LocalDate stDataDemissao) {
-        this.stDataDemissao = stDataDemissao;
-    }
 }

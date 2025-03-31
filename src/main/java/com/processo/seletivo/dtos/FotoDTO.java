@@ -1,5 +1,8 @@
 package com.processo.seletivo.dtos;
 
+import lombok.Getter;
+
+@Getter
 public class FotoDTO {
     private String nome;
     private String url;
@@ -9,11 +12,4 @@ public class FotoDTO {
         this.url = url;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public String getUrl() {
-        return url;
-    }
 }

@@ -1,11 +1,16 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "lotacao")
+@Getter
+@Setter
 public class Lotacao {
 
     @Id
@@ -29,51 +34,6 @@ public class Lotacao {
     @Column(length = 100)
     private String lotPortaria;
 
-    public Integer getLotId() {
-        return lotId;
-    }
-
-    public void setLotId(Integer lotId) {
-        this.lotId = lotId;
-    }
-
-    public ServidorEfetivo getServidorEfetivo() {
-        return servidorEfetivo;
-    }
-
-    public void setServidorEfetivo(ServidorEfetivo servidorEfetivo) {
-        this.servidorEfetivo = servidorEfetivo;
-    }
-
-    public Unidade getUnidade() {
-        return unidade;
-    }
-
-    public void setUnidade(Unidade unidade) {
-        this.unidade = unidade;
-    }
-
-    public LocalDate getLotDataLotacao() {
-        return lotDataLotacao;
-    }
-
-    public void setLotDataLotacao(LocalDate lotDataLotacao) {
-        this.lotDataLotacao = lotDataLotacao;
-    }
-
-    public LocalDate getLotDataRemocao() {
-        return lotDataRemocao;
-    }
-
-    public void setLotDataRemocao(LocalDate lotDataRemocao) {
-        this.lotDataRemocao = lotDataRemocao;
-    }
-
-    public String getLotPortaria() {
-        return lotPortaria;
-    }
-
-    public void setLotPortaria(String lotPortaria) {
-        this.lotPortaria = lotPortaria;
-    }
+    @OneToMany(mappedBy = "lotacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LotacaoEndereco> enderecos;
 }

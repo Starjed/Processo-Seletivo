@@ -38,7 +38,7 @@ public class UnidadeController {
         return ResponseEntity.ok(unidadeService.salvar(unidade));
     }
 
-    @DeleteMapping("/excluir/{id}")
+    @DeleteMapping("/remover/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         unidadeService.deletar(id);
         return ResponseEntity.noContent().build();

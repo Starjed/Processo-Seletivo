@@ -1,5 +1,6 @@
 package com.processo.seletivo.configurations;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,28 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token ausente ou mal formatado");
+        }
+
+        String token = authHeader.substring(7);
+        try {
+            String username = jwtService.extractUsername(token);
+
+            if (!jwtService.isTokenExpired(token)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token ainda válido");
+            }
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String novoToken = jwtService.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthResponse(novoToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado");
+        }
+    }
+
     public static class AuthRequest {
         private String username;
         private String password;
@@ -51,11 +74,12 @@ public class AuthController {
         public void setPassword(String password) { this.password = password; }
     }
 
+    @Getter
     public static class AuthResponse {
         private String token;
 
         public AuthResponse(String token) { this.token = token; }
 
-        public String getToken() { return token; }
+        public void setToken(String token) { this.token = token; }
     }
 }
