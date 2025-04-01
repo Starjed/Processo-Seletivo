@@ -2,6 +2,7 @@ package com.processo.seletivo.services;
 
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
+import com.processo.seletivo.dtos.ServidorEfetivoResumoDTO;
 import com.processo.seletivo.models.Pessoa;
 import com.processo.seletivo.models.ServidorEfetivo;
 import com.processo.seletivo.repository.ServidorEfetivoRepository;
@@ -41,7 +42,7 @@ public class ServidorEfetivoService {
         servidorEfetivoRepository.deleteById(id);
     }
 
-    public Page<ServidorEfetivoDTO> buscarResumoPorUnidade(Pageable pageable, Integer unidId) {
+    public Page<ServidorEfetivoResumoDTO> buscarResumoPorUnidade(Pageable pageable, Integer unidId) {
         return servidorEfetivoRepository.buscarResumoPorUnidade(unidId, pageable);
     }
 

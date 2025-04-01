@@ -2,6 +2,7 @@ package com.processo.seletivo.repository;
 
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
+import com.processo.seletivo.dtos.ServidorEfetivoResumoDTO;
 import com.processo.seletivo.models.ServidorEfetivo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,7 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
 
 
     @Query("""
-    SELECT new com.processo.seletivo.dtos.ServidorEfetivoDTO(
+    SELECT new com.processo.seletivo.dtos.ServidorEfetivoResumoDTO(
         p.pesNome,
         YEAR(CURRENT_DATE) - YEAR(p.pesDataNascimento),
         u.unidNome,
@@ -35,7 +36,7 @@ public interface ServidorEfetivoRepository extends JpaRepository<ServidorEfetivo
     LEFT JOIN FotoPessoa fp ON fp.pessoa.pesId = p.pesId
     WHERE u.unidId = :unidId
 """)
-    Page<ServidorEfetivoDTO> buscarResumoPorUnidade(@Param("unidId") Integer unidId, Pageable pageable);
+    Page<ServidorEfetivoResumoDTO> buscarResumoPorUnidade(@Param("unidId") Integer unidId, Pageable pageable);
 
 
     @Query("""

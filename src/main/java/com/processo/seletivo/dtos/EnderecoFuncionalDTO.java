@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 public class EnderecoFuncionalDTO {
     private String servidor;
-
     private String unidade;
     private String endereco;
 

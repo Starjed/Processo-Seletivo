@@ -24,7 +24,6 @@ public class ServidorEfetivo {
     @OneToOne(cascade = CascadeType.MERGE)
     @MapsId
     @JoinColumn(name = "pes_id")
-    @JsonIgnore
     private Pessoa pessoa;
 
     @OneToMany(mappedBy = "servidorEfetivo", cascade = CascadeType.ALL, orphanRemoval = true)

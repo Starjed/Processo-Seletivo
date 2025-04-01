@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.processo.seletivo.services.PessoaService;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/pessoas")
@@ -47,20 +49,22 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.salvar(pessoa));
     }
 
-    @PutMapping("/pessoas/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody PessoaDTO dto) {
-        Pessoa pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> editarPessoa(@PathVariable Integer id, @RequestBody Pessoa dto) {
+        Optional<Pessoa> pessoaOpt = pessoaRepository.findById(id);
+        if (pessoaOpt.isEmpty()) return ResponseEntity.notFound().build();
 
-        pessoa.setPesNome(dto.getPesNome());
-        pessoa.setPesDataNascimento(dto.getPesDataNascimento());
-        pessoa.setPesSexo(dto.getPesSexo());
-        pessoa.setPesMae(dto.getPesMae());
-        pessoa.setPesPai(dto.getPesPai());
+        Pessoa pessoa = pessoaOpt.get();
 
-        pessoaRepository.save(pessoa);
-        return ResponseEntity.ok("Pessoa atualizada com sucesso");
+        if (dto.getPesNome() != null) pessoa.setPesNome(dto.getPesNome());
+        if (dto.getPesSexo() != null) pessoa.setPesSexo(dto.getPesSexo());
+        if (dto.getPesDataNascimento() != null) pessoa.setPesDataNascimento(dto.getPesDataNascimento());
+        if (dto.getPesMae() != null) pessoa.setPesMae(dto.getPesMae());
+        if (dto.getPesPai() != null) pessoa.setPesPai(dto.getPesPai());
+
+        return ResponseEntity.ok(pessoaRepository.save(pessoa));
     }
+
 
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {

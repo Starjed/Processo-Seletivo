@@ -2,7 +2,10 @@ package com.processo.seletivo.controllers;
 
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
+import com.processo.seletivo.dtos.ServidorEfetivoResumoDTO;
+import com.processo.seletivo.models.Pessoa;
 import com.processo.seletivo.models.ServidorEfetivo;
+import com.processo.seletivo.repository.PessoaRepository;
 import com.processo.seletivo.repository.ServidorEfetivoRepository;
 import com.processo.seletivo.services.ServidorEfetivoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +28,11 @@ public class ServidorEfetivoController {
 
     private final ServidorEfetivoRepository servidorEfetivoRepository;
 
-    public ServidorEfetivoController(ServidorEfetivoRepository servidorEfetivoRepository) {
+    private final PessoaRepository pessoaRepository;
+
+    public ServidorEfetivoController(ServidorEfetivoRepository servidorEfetivoRepository, PessoaRepository pessoaRepository) {
         this.servidorEfetivoRepository = servidorEfetivoRepository;
+        this.pessoaRepository = pessoaRepository;
     }
 
     @GetMapping("/efetivos")
@@ -40,10 +46,19 @@ public class ServidorEfetivoController {
     }
 
     @PostMapping("/efetivos")
-    public ResponseEntity<ServidorEfetivo> criarEfetivo(@RequestBody ServidorEfetivo servidor) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(servidorEfetivoService.salvar(servidor));
-    }
+    public ResponseEntity<?> criarEfetivo(@RequestBody ServidorEfetivo servidor) {
+        if (servidor.getPessoa() == null || servidor.getPessoa().getPesId() == null) {
+            return ResponseEntity.badRequest().body("Pessoa deve ser informada com ID.");
+        }
 
+        Pessoa pessoa = pessoaRepository.findById(servidor.getPessoa().getPesId())
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+
+        servidor.setPessoa(pessoa);
+
+        ServidorEfetivo salvo = servidorEfetivoService.salvar(servidor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    }
 
     @PutMapping("/efetivos/editar/{id}")
     public ResponseEntity<?> editarEfetivo(@PathVariable Integer id, @RequestBody ServidorEfetivoDTO dto) {
@@ -70,7 +85,7 @@ public class ServidorEfetivoController {
     }
 
     @GetMapping("/por-unidade/{unidId}")
-    public ResponseEntity<Page<ServidorEfetivoDTO>> listarPorUnidade(Pageable pageable, @PathVariable Integer unidId) {
+    public ResponseEntity<Page<ServidorEfetivoResumoDTO>> listarPorUnidade(Pageable pageable, @PathVariable Integer unidId) {
         return ResponseEntity.ok(servidorEfetivoService.buscarResumoPorUnidade(pageable, unidId));
     }
 
