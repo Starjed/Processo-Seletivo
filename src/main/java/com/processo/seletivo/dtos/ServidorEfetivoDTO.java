@@ -8,9 +8,10 @@ import lombok.Setter;
 public class ServidorEfetivoDTO {
     private String nome;
     private Integer idade;
-
+    private Integer pesId;
     private String unidade;
     private String fotoUrl;
+    private String seMatricula;
 
     public ServidorEfetivoDTO(String nome, Integer idade, String unidade, String fotoUrl) {
         this.nome = nome;
