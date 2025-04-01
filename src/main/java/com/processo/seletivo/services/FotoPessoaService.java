@@ -38,6 +38,7 @@ public class FotoPessoaService {
         criarBucketSeNaoExistir();
 
         List<FotoPessoa> fotosSalvas = new ArrayList<>();
+        long partSize = 10 * 1024 * 1024; // 10 MB
 
         for (MultipartFile file : arquivos) {
             String nomeArquivo = gerarNomeArquivo(file);
@@ -46,7 +47,7 @@ public class FotoPessoaService {
                     PutObjectArgs.builder()
                             .bucket(bucket)
                             .object(nomeArquivo)
-                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .stream(file.getInputStream(), -1, partSize)
                             .contentType(file.getContentType())
                             .build()
             );
@@ -123,4 +124,27 @@ public class FotoPessoaService {
         fotoPessoaRepository.delete(foto);
     }
 
+    @Transactional
+    public void atualizarFoto(Integer fotoId, MultipartFile novoArquivo) throws Exception {
+        FotoPessoa foto = fotoPessoaRepository.findById(fotoId)
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada"));
+
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                .bucket(foto.getFpBucket())
+                .object(foto.getFpHash())
+                .build());
+
+        String novoNome = gerarNomeArquivo(novoArquivo);
+        minioClient.putObject(PutObjectArgs.builder()
+                .bucket(foto.getFpBucket())
+                .object(novoNome)
+                .stream(novoArquivo.getInputStream(), novoArquivo.getSize(), -1)
+                .contentType(novoArquivo.getContentType())
+                .build());
+
+        foto.setFpHash(novoNome);
+        foto.setFpData(LocalDate.now());
+
+        fotoPessoaRepository.save(foto);
+    }
 }

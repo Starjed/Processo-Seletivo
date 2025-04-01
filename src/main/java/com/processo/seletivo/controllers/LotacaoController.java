@@ -1,6 +1,12 @@
 package com.processo.seletivo.controllers;
 
+import com.processo.seletivo.dtos.LotacaoDTO;
 import com.processo.seletivo.models.Lotacao;
+import com.processo.seletivo.models.ServidorEfetivo;
+import com.processo.seletivo.models.Unidade;
+import com.processo.seletivo.repository.LotacaoRepository;
+import com.processo.seletivo.repository.ServidorEfetivoRepository;
+import com.processo.seletivo.repository.UnidadeRepository;
 import com.processo.seletivo.services.LotacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -17,15 +25,43 @@ public class LotacaoController {
     @Autowired
     private LotacaoService lotacaoService;
 
+    private final LotacaoRepository lotacaoRepository;
+
+    private final ServidorEfetivoRepository servidorEfetivoRepository;
+
+    private final UnidadeRepository unidadeRepository;
+
+    public LotacaoController(LotacaoRepository lotacaoRepository, ServidorEfetivoRepository servidorEfetivoRepository, UnidadeRepository unidadeRepository) {
+        this.lotacaoRepository = lotacaoRepository;
+        this.servidorEfetivoRepository = servidorEfetivoRepository;
+        this.unidadeRepository = unidadeRepository;
+    }
+
     @PostMapping
     public ResponseEntity<Lotacao> criar(@RequestBody Lotacao lotacao) {
         return ResponseEntity.ok(lotacaoService.salvar(lotacao));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Lotacao> atualizar(@PathVariable Integer id, @RequestBody Lotacao lotacao) {
-        lotacao.setLotId(id);
-        return ResponseEntity.ok(lotacaoService.salvar(lotacao));
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody LotacaoDTO dto) {
+        Optional<Lotacao> opt = lotacaoRepository.findById(id);
+        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Lotacao lotacao = opt.get();
+
+        ServidorEfetivo servidor = servidorEfetivoRepository.findById(dto.getServidorId())
+                .orElseThrow(() -> new RuntimeException("Servidor Efetivo não encontrado"));
+        Unidade unidade = unidadeRepository.findById(dto.getUnidadeId())
+                .orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+
+        lotacao.setServidorEfetivo(servidor);
+        lotacao.setUnidade(unidade);
+        lotacao.setLotDataLotacao(dto.getLotDataLotacao());
+        lotacao.setLotDataRemocao(dto.getLotDataRemocao());
+        lotacao.setLotPortaria(dto.getLotPortaria());
+
+        lotacaoRepository.save(lotacao);
+        return ResponseEntity.ok("Lotação atualizada com sucesso.");
     }
 
     @GetMapping

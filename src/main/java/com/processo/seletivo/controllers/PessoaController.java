@@ -1,6 +1,8 @@
 package com.processo.seletivo.controllers;
 
+import com.processo.seletivo.dtos.PessoaDTO;
 import com.processo.seletivo.models.Pessoa;
+import com.processo.seletivo.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,12 @@ public class PessoaController {
 
     @Autowired
     private PessoaService pessoaService;
+
+    private final PessoaRepository pessoaRepository;
+
+    public PessoaController(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
+    }
 
     @GetMapping
     public ResponseEntity<Page<Pessoa>> listarTodosPaginado(
@@ -39,11 +47,19 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.salvar(pessoa));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Integer id, @RequestBody Pessoa pessoa) {
-        pessoa.setPesId(id);
-        Pessoa atualizada = pessoaService.salvar(pessoa);
-        return ResponseEntity.ok(atualizada);
+    @PutMapping("/pessoas/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id, @RequestBody PessoaDTO dto) {
+        Pessoa pessoa = pessoaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+
+        pessoa.setPesNome(dto.getPesNome());
+        pessoa.setPesDataNascimento(dto.getPesDataNascimento());
+        pessoa.setPesSexo(dto.getPesSexo());
+        pessoa.setPesMae(dto.getPesMae());
+        pessoa.setPesPai(dto.getPesPai());
+
+        pessoaRepository.save(pessoa);
+        return ResponseEntity.ok("Pessoa atualizada com sucesso");
     }
 
     @DeleteMapping("/excluir/{id}")

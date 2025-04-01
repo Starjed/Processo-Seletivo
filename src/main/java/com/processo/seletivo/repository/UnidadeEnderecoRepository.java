@@ -1,4 +1,3 @@
-// UnidadeEnderecoRepository.java
 package com.processo.seletivo.repository;
 
 import com.processo.seletivo.models.UnidadeEndereco;

@@ -1,5 +1,7 @@
 package com.processo.seletivo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,7 @@ public class Lotacao {
 
     @ManyToOne
     @JoinColumn(name = "pes_id", nullable = false)
+    @JsonBackReference
     private ServidorEfetivo servidorEfetivo;
 
     @ManyToOne
@@ -35,5 +38,6 @@ public class Lotacao {
     private String lotPortaria;
 
     @OneToMany(mappedBy = "lotacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<LotacaoEndereco> enderecos;
 }

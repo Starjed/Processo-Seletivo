@@ -1,5 +1,6 @@
 package com.processo.seletivo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,14 +32,18 @@ public class Pessoa {
     private String pesPai;
 
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private ServidorEfetivo servidorEfetivo;
 
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private ServidorTemporario servidorTemporario;
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<FotoPessoa> fotos;
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<PessoaEndereco> enderecos;
 }

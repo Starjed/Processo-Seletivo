@@ -1,5 +1,6 @@
 package com.processo.seletivo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class ServidorTemporario {
     @OneToOne(cascade = CascadeType.MERGE)
     @MapsId
     @JoinColumn(name = "pes_id")
+    @JsonIgnore
     private Pessoa pessoa;
 
     @Column(name = "st_data_admissao")

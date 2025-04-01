@@ -1,5 +1,6 @@
 package com.processo.seletivo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,5 +24,6 @@ public class Unidade {
     private String unidSigla;
 
     @OneToMany(mappedBy = "unidade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<UnidadeEndereco> enderecos;
 }

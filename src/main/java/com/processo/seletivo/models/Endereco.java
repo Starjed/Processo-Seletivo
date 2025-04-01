@@ -1,5 +1,6 @@
 package com.processo.seletivo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,11 +39,14 @@ public class Endereco {
     private Cidade cidade;
 
     @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<PessoaEndereco> pessoas;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnidadeEndereco> unidades;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "endereco", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LotacaoEndereco> lotacoes;
 }

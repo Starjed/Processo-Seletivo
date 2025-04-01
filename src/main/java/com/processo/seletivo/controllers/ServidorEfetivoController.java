@@ -3,6 +3,7 @@ package com.processo.seletivo.controllers;
 import com.processo.seletivo.dtos.EnderecoFuncionalDTO;
 import com.processo.seletivo.dtos.ServidorEfetivoDTO;
 import com.processo.seletivo.models.ServidorEfetivo;
+import com.processo.seletivo.repository.ServidorEfetivoRepository;
 import com.processo.seletivo.services.ServidorEfetivoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +14,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/servidores-efetivos")
+@RequestMapping("/api/servidores")
 public class ServidorEfetivoController {
 
     @Autowired
     private ServidorEfetivoService servidorEfetivoService;
+
+    private final ServidorEfetivoRepository servidorEfetivoRepository;
+
+    public ServidorEfetivoController(ServidorEfetivoRepository servidorEfetivoRepository) {
+        this.servidorEfetivoRepository = servidorEfetivoRepository;
+    }
 
     @GetMapping("/efetivos")
     public Page<ServidorEfetivo> listarEfetivos(
@@ -36,10 +45,16 @@ public class ServidorEfetivoController {
     }
 
 
-    @PutMapping("/efetivos/{id}")
-    public ResponseEntity<ServidorEfetivo> atualizarEfetivo(@PathVariable Integer id, @RequestBody ServidorEfetivo servidor) {
-        servidor.setPesId(id);
-        return ResponseEntity.ok(servidorEfetivoService.salvar(servidor));
+    @PutMapping("/efetivos/editar/{id}")
+    public ResponseEntity<?> editarEfetivo(@PathVariable Integer id, @RequestBody ServidorEfetivoDTO dto) {
+        Optional<ServidorEfetivo> opt = servidorEfetivoRepository.findById(id);
+        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+        ServidorEfetivo servidor = opt.get();
+        servidor.setSeMatricula(dto.getSeMatricula());
+        servidorEfetivoRepository.save(servidor);
+
+        return ResponseEntity.ok("Servidor efetivo atualizado.");
     }
 
     @GetMapping("/efetivos/{id}")

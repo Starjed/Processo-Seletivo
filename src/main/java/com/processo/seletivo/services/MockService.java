@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MockService {
@@ -22,6 +23,7 @@ public class MockService {
     @Autowired private FotoPessoaRepository fotoPessoaRepository;
     @Autowired private EnderecoRepository enderecoRepository;
     @Autowired private PessoaEnderecoRepository pessoaEnderecoRepository;
+    @Autowired private CidadeRepository cidadeRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,16 +34,20 @@ public class MockService {
         List<String> nomes = List.of("Ana Clara", "Bruno Silva", "Carla Souza", "Daniel Rocha", "Eduarda Lima");
         List<String> logradouros = List.of("Rua das Flores", "Avenida Brasil", "Travessa da Paz", "Rua das Acácias", "Alameda Central");
 
-        // Criar 3 unidades
+        Cidade cidade = new Cidade();
+        cidade.setCidNome("Cidade Exemplo");
+        cidade.setCidUf("SP");
+        cidade = cidadeRepository.save(cidade);
+
         List<Unidade> unidades = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Unidade unidade = new Unidade();
             unidade.setUnidNome("Unidade " + i);
+            unidade.setUnidSigla("Uni" + i);
             unidade = unidadeRepository.save(unidade);
             unidades.add(unidade);
         }
 
-        // Criar 5 endereços
         List<Endereco> enderecos = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Endereco endereco = new Endereco();
@@ -49,11 +55,13 @@ public class MockService {
             endereco.setEndBairro("Bairro " + (i + 1));
             endereco.setEndUf("UF");
             endereco.setEndCep("1234" + i + "-000");
+            endereco.setCidade(cidade);
+            endereco.setEndNumero(100);
+            endereco.setEndTipoLogradouro("Casa");
             endereco = enderecoRepository.save(endereco);
             enderecos.add(endereco);
         }
 
-        // Criar 5 pessoas com seus vínculos
         for (int i = 0; i < 5; i++) {
             Pessoa pessoa = new Pessoa();
             pessoa.setPesNome(nomes.get(i));
@@ -81,6 +89,7 @@ public class MockService {
             foto.setPessoa(pessoa);
             foto.setFpData(LocalDate.now());
             foto.setFpBucket("fotos");
+            foto.setFpHash(UUID.randomUUID().toString());
             fotoPessoaRepository.save(foto);
 
             PessoaEndereco pessoaEndereco = new PessoaEndereco();

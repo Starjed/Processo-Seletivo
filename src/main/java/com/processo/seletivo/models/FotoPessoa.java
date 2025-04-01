@@ -1,8 +1,13 @@
 package com.processo.seletivo.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "foto_pessoa")
 public class FotoPessoa {
@@ -24,43 +29,4 @@ public class FotoPessoa {
     @Column(name = "fp_hash", length = 50, nullable = false)
     private String fpHash;
 
-    public Integer getFpId() {
-        return fpId;
-    }
-
-    public void setFpId(Integer fpId) {
-        this.fpId = fpId;
-    }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public LocalDate getFpData() {
-        return fpData;
-    }
-
-    public void setFpData(LocalDate fpData) {
-        this.fpData = fpData;
-    }
-
-    public String getFpBucket() {
-        return fpBucket;
-    }
-
-    public void setFpBucket(String fpBucket) {
-        this.fpBucket = fpBucket;
-    }
-
-    public String getFpHash() {
-        return fpHash;
-    }
-
-    public void setFpHash(String fpHash) {
-        this.fpHash = fpHash;
-    }
 }

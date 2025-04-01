@@ -61,4 +61,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public Claims extractAllClaimsAllowExpired(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
 }

@@ -1,6 +1,13 @@
 package com.processo.seletivo.configurations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.processo.seletivo.models.Pessoa;
+import com.processo.seletivo.models.RefreshToken;
+import com.processo.seletivo.repository.PessoaRepository;
+import com.processo.seletivo.services.RefreshTokenService;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +23,16 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtService jwtService,
-                          UserDetailsService userDetailsService) {
+                          UserDetailsService userDetailsService,
+                          RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/login")
@@ -33,53 +43,63 @@ public class AuthController {
             );
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-            String token = jwtService.generateToken(userDetails);
+            String accessToken = jwtService.generateToken(userDetails);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
 
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(accessToken, refreshToken.getToken()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token ausente ou mal formatado");
-        }
+    public ResponseEntity<?> refreshAccessToken(@RequestBody RefreshRequest request) {
+        return refreshTokenService.findByToken(request.getRefreshToken())
+                .map(refreshToken -> {
+                    if (refreshTokenService.isExpired(refreshToken)) {
+                        refreshTokenService.deleteByUsername(refreshToken.getUsername());
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expirado.");
+                    }
 
-        String token = authHeader.substring(7);
-        try {
-            String username = jwtService.extractUsername(token);
+                    UserDetails user = userDetailsService.loadUserByUsername(refreshToken.getUsername());
+                    String newAccessToken = jwtService.generateToken(user);
 
-            if (!jwtService.isTokenExpired(token)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token ainda válido");
-            }
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            String novoToken = jwtService.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthResponse(novoToken));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado");
-        }
+                    return ResponseEntity.ok(new AuthResponse(newAccessToken));
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token inválido."));
     }
 
+    @Setter
+    @Getter
     public static class AuthRequest {
         private String username;
         private String password;
 
-        public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
-
-        public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
     }
 
     @Getter
+    @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class AuthResponse {
-        private String token;
+        private String accessToken;
 
-        public AuthResponse(String token) { this.token = token; }
+        private String refreshToken;
 
-        public void setToken(String token) { this.token = token; }
+        public AuthResponse(String accessToken) {
+            this.accessToken = accessToken;
+        }
+
+        public AuthResponse(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+    }
+
+
+    @Setter
+    @Getter
+    public static class RefreshRequest {
+        private String refreshToken;
+
     }
 }

@@ -50,5 +50,17 @@ public class FotoPessoaController {
         }
     }
 
+    @PutMapping("/editar/{fotoId}")
+    public ResponseEntity<?> editarFoto(
+            @PathVariable Integer fotoId,
+            @RequestParam("file") MultipartFile novoArquivo) {
+        try {
+            fotoService.atualizarFoto(fotoId, novoArquivo);
+            return ResponseEntity.ok("Foto atualizada com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro ao atualizar a foto: " + e.getMessage());
+        }
+    }
+
 }
 

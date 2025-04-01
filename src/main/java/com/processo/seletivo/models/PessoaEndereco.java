@@ -17,12 +17,10 @@ public class PessoaEndereco {
     @JoinColumn(name = "pes_id")
     private Pessoa pessoa;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "end_id")
     private Endereco endereco;
 
-    public Endereco getEndereco() {
-        return endereco;
-    }
 }
 
