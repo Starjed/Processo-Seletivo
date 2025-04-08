@@ -59,16 +59,119 @@ com as mesmas roles.
 
 # Endpoints principais para o crud
 
-obs: irei anexar um link do youtube contendo o passo a passo além de incluir o arquivo yml para fazer a simulação das requisições via insomnia
+Este arquivo do drive possui todas as requests utilizando o aplicativo Insominia, o conteúdo dele é um yaml que pode ser importado para o aplicativo.
 
-# Upload de Imagens
+https://drive.google.com/file/d/1MTlKD2AymCgAh_G2ELq3OyDvCoaaV2cM/view
 
-**Upload de uma ou várias imagens para uma pessoa:**
+##  Pessoa
 
-`POST /api/fotos/pessoa/{pessoaId}/upload`
+| Método | Endpoint                        | Descrição                           |
+|--------|----------------------------------|-------------------------------------|
+| GET    | `/api/pessoas`                  | Lista todas as pessoas              |
+| GET    | `/api/pessoas/{id}`             | Busca uma pessoa por ID             |
+| POST   | `/api/pessoas`                  | Cria uma nova pessoa                |
+| PUT    | `/api/pessoas/editar/{id}`      | Edita os dados de uma pessoa        |
+| DELETE | `/api/pessoas/excluir/{id}`     | Exclui uma pessoa                   |
 
-**Listar URLs temporárias das fotos da pessoa:**
+---
 
-`GET /api/fotos/pessoa/{pessoaId}/links`
+##  Cidade
 
+| Método | Endpoint                        | Descrição                           |
+|--------|----------------------------------|-------------------------------------|
+| GET    | `/api/cidades`                  | Lista todas as cidades              |
+| POST   | `/api/cidades`                  | Cria uma nova cidade                |
+| PUT    | `/api/cidades/editar/{id}`      | Edita dados de uma cidade           |
+| DELETE | `/api/cidades/excluir/{id}`     | Remove uma cidade                   |
 
+---
+
+##  Unidade
+
+| Método | Endpoint                        | Descrição                           |
+|--------|----------------------------------|-------------------------------------|
+| GET    | `/api/unidades`                 | Lista todas as unidades             |
+| POST   | `/api/unidades`                 | Cria uma nova unidade               |
+| PUT    | `/api/unidades/editar/{id}`     | Edita uma unidade                   |
+| DELETE | `/api/unidades/excluir/{id}`    | Exclui uma unidade                  |
+
+---
+
+##  Lotação
+
+| Método | Endpoint                        | Descrição                           |
+|--------|----------------------------------|-------------------------------------|
+| GET    | `/api/lotacoes`                 | Lista todas as lotações             |
+| POST   | `/api/lotacoes`                 | Cria uma lotação                    |
+| PUT    | `/api/edicao/lotacao/{id}`      | Edita uma lotação                   |
+| DELETE | `/api/lotacoes/excluir/{id}`    | Exclui uma lotação                  |
+
+---
+
+## Servidor Efetivo
+
+| Método | Endpoint                                     | Descrição                                 |
+|--------|-----------------------------------------------|-------------------------------------------|
+| GET    | `/api/servidores/por-unidade/{id}`            | Lista servidores por unidade              |
+| GET    | `/api/servidores/efetivos/{id}`               | Unidade funcional do servidor efetivo     |
+| POST   | `/api/servidores/efetivos`                    | Cria um servidor efetivo                  |
+| PUT    | `/api/servidores/efetivos/{id}`               | Edita um servidor efetivo                 |
+| DELETE | `/api/servidores/efetivos/excluir/{id}`       | Exclui um servidor efetivo                |
+
+---
+
+## Servidor Temporário
+
+| Método | Endpoint                                     | Descrição                                 |
+|--------|-----------------------------------------------|-------------------------------------------|
+| GET    | `/api/servidores/temporarios`                | Lista todos os servidores temporários     |
+| POST   | `/api/servidores/temporarios/criar`          | Cria um servidor temporário               |
+| PUT    | `/api/servidores/temporarios/editar/{id}`    | Edita um servidor temporário              |
+
+---
+
+## Endereços
+
+| Método | Endpoint                                | Descrição                                     |
+|--------|------------------------------------------|-----------------------------------------------|
+| GET    | `/api/pessoa-endereco`                  | Lista pessoas com seus endereços              |
+| POST   | `/api/enderecos`                        | Cria endereço associado à cidade              |
+| PUT    | `/api/enderecos/editar/{id}`            | Edita um endereço                             |
+| DELETE | `/api/enderecos/excluir/{id}`           | Remove um endereço                            |
+
+---
+
+## Associações
+
+| Ação                                  | Endpoint                                         |
+|--------------------------------------|--------------------------------------------------|
+| Associar Endereço a Pessoa           | `POST /api/pessoa-endereco`                     |
+| Associar Endereço a Unidade          | `POST /api/unidade-endereco/associar`           |
+| Associar Endereço a Lotação          | `POST /api/lotacoes-enderecos`                  |
+
+---
+
+## Fotos
+
+| Método | Endpoint                                | Descrição                                             |
+|--------|------------------------------------------|-------------------------------------------------------|
+| POST   | `/api/fotos/upload`                     | Upload de uma ou mais imagens para uma pessoa        |
+| GET    | `/api/fotos/pessoa/{id}/links`          | Recupera links temporários das fotos da pessoa       |
+| PUT    | `/api/fotos/editar/{id}`                | Atualiza uma foto                                    |
+| DELETE | `/api/fotos/excluir/{id}`               | Exclui uma foto                                      |
+
+---
+
+## Endpoints Específicos
+
+| Endpoint                                             | Descrição                                                |
+|------------------------------------------------------|----------------------------------------------------------|
+| `GET /api/servidores/enderecos-funcionais?nome=XXX` | Busca endereço funcional da unidade por nome do servidor |
+
+---
+
+## CORS e Segurança
+
+- Sem JWT → **bloqueado**
+- Origem maliciosa (`http://evil.com`) → **bloqueado**
+- Frontend Angular (`http://localhost:4200`) com token válido → **permitido**
